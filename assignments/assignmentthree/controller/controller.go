@@ -1,10 +1,9 @@
-package main
+package controller
 
 import (
 	"fmt"
 
 	"github.com/bagomkarnath/go_code/assignments/assignmenttwo/domain"
-	"github.com/bagomkarnath/go_code/assignments/assignmenttwo/mapstore"
 )
 
 // CustomerController as controller
@@ -61,28 +60,4 @@ func (controller CustomerController) Get(custid string) {
 		return
 	}
 	fmt.Println("Customer : ", cust)
-}
-
-func main() {
-
-	controller := CustomerController{
-		store: mapstore.NewMapStore(),
-	}
-	customer1 := domain.Customer{ID: "1", Name: "Rosan", Email: "rosan@gmail.com"}
-	customer2 := domain.Customer{ID: "2", Name: "Rajesh", Email: "rajesh@gmail.com"}
-	customer3 := domain.Customer{ID: "2", Name: "Rajish", Email: "rajesh@gmail.com"}
-
-	controller.Add(customer1)
-	controller.Add(customer2)
-
-	controller.ShowAll()
-
-	controller.Update("2", customer3)
-
-	controller.Get("2")
-
-	controller.Delete("1")
-
-	controller.ShowAll()
-
 }

@@ -1,9 +1,8 @@
 package mapstore
 
 import (
-	"errors"
-
 	"github.com/bagomkarnath/go_code/assignments/assignmenttwo/domain"
+	"github.com/bagomkarnath/go_code/assignments/assignmenttwo/err"
 )
 
 // MapStore to store data
@@ -13,16 +12,26 @@ type MapStore struct {
 
 // NewMapStore factory method for new instance of MapStore
 func NewMapStore() *MapStore {
-	return &MapStore{store: make(map[string]domain.Customer)}
+	myStore := make(map[string]domain.Customer)
+
+	customer1 := domain.Customer{ID: "90", Name: "Sachin", Email: "sachin@gmail.com"}
+	customer2 := domain.Customer{ID: "91", Name: "Saurav", Email: "saurav@gmail.com"}
+	customer3 := domain.Customer{ID: "92", Name: "Laxman", Email: "laxman@gmail.com"}
+
+	myStore["90"] = customer1
+	myStore["91"] = customer2
+	myStore["92"] = customer3
+
+	return &MapStore{store: myStore}
 }
 
 // Create customer data
 func (ms *MapStore) Create(c domain.Customer) error {
 	if ms != nil {
-		(*ms).store[c.GetID()] = c
+		(*ms).store[c.ID] = c
 		return nil
 	}
-	return errors.New("MapStore not initialized")
+	return err.ErrMapStoreNotInitialized
 }
 
 // Update customer data
@@ -31,10 +40,7 @@ func (ms *MapStore) Update(custid string, c domain.Customer) error {
 	if err != nil {
 		return err
 	}
-	var upCust domain.Customer
-	upCust.SetID(c.GetID())
-	upCust.SetName(c.GetName())
-	upCust.SetEmail(c.GetEmail())
+	upCust := domain.Customer{ID: c.ID, Name: c.Name, Email: c.Email}
 	(*ms).store[custid] = upCust
 	return nil
 }
@@ -55,14 +61,14 @@ func (ms *MapStore) GetByID(custid string) (domain.Customer, error) {
 	if ok {
 		return cust, nil
 	}
-	return cust, errors.New("Customer doesn't exists")
+	return cust, err.ErrCustomerDoesNotExists
 
 }
 
 // GetAll customer data
 func (ms *MapStore) GetAll() ([]domain.Customer, error) {
 	if len((*ms).store) == 0 {
-		return nil, errors.New("No data in Map Store")
+		return nil, err.ErrNoDataInMapStore
 	}
 	customers := make([]domain.Customer, 0, len((*ms).store))
 	for _, v := range (*ms).store {
